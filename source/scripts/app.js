@@ -1,4 +1,4 @@
-import Game from './classes/Game';
+import Menu from './states/menu';
 
 const settings = {
     width: 800,
@@ -10,7 +10,7 @@ class Init extends Phaser.Game {
         super(settings.width, settings.height, Phaser.AUTO, 'game');
         this.state.add('Boot', Boot, false);
         this.state.add('Preloader', Preloader, false);
-        this.state.add('Game', Game, false);
+        this.state.add('Menu', Menu, false);
         this.state.start('Boot');
     }
 }
@@ -43,11 +43,11 @@ class Boot extends Phaser.State {
 
 class Preloader extends Phaser.State{
     preload() {
-        this.game.load.image('example', 'assets/images/example.png');
+
     }
 
     create(){
-        this.game.state.start('Game');
+        this.game.state.start('Menu');
     }
 
 }
