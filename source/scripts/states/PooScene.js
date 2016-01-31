@@ -19,6 +19,7 @@ export default class PooScene extends ChaptersManager {
         this.game.load.image('januszPart9', 'assets/images/pooMan/boom/09.png');
         this.game.load.image('januszPart10', 'assets/images/pooMan/boom/10.png');
         this.game.load.image('januszPart11', 'assets/images/pooMan/boom/11.png');
+        this.game.load.image('frameBar', 'assets/images/pooMan/ramka.png');
     }
 
     create() {
@@ -134,7 +135,7 @@ export default class PooScene extends ChaptersManager {
     }
 
     setSceneParameters() {
-        this.startBadProgressWidth = 150;
+        this.startBadProgressWidth = 200;
         this.minMagneticPowerToCalculate = 10;
         this.minMagneticPower = 12;
         this.maxMagneticPower = 23;
@@ -157,7 +158,7 @@ export default class PooScene extends ChaptersManager {
     setBar() {
         var barCenterY = this.game.height - 100;
         var hardnessBarMultiplier = this.game.global.level * this.game.width / 20;
-        this.toiletBarMargin = 20;
+        this.toiletBarMargin = 70;
         this.toiletBarBadLeft = this.game.add.sprite(0, barCenterY, 'toiletBarBad');
         this.toiletBarBadLeft.x = this.toiletBarMargin;
         var maxX = this.game.width / 2 - this.toiletBarMargin;
@@ -170,6 +171,13 @@ export default class PooScene extends ChaptersManager {
         this.toiletBarCorrect = this.game.add.sprite(0, barCenterY, 'toiletBarCorrect');
         this.toiletBarCorrect.x = this.toiletBarMargin + this.toiletBarBadLeft.scale.x;
         this.toiletBarCorrect.scale.x = (this.game.width / 2 - this.toiletBarMargin - this.toiletBarBadRight.width) * 2;
+
+        this.barFrame = this.game.add.sprite(0, barCenterY + 2, 'frameBar');
+        this.barFrame.anchor.setTo(0.5, 0.29);
+        this.barFrame.x = this.game.world.width / 2;
+        this.barFrame.scale.setTo(2, 1);
+
+
         this.toiletMarker = this.game.add.sprite(0, 0, 'toiletMarker');
         this.toiletMarker.y = barCenterY - (this.toiletMarker.height - this.toiletBarCorrect.height) / 2;//barCenterY;
         this.toiletMarker.x = this.game.width / 2 - this.toiletMarker.width / 2;
