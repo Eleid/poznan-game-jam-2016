@@ -7,6 +7,7 @@ export default class CoffeeMachine extends ChaptersManager{
 
 	preload(){
 		this.game.load.image('coffeeMachineBg', 'assets/images/coffeeMachine/bg.jpg');
+		this.game.load.image('coffeeMachineBgHappy', 'assets/images/coffeeMachine/bg_happy.jpg');
 		this.game.load.image('machine', 'assets/images/coffeeMachine/machine.png');
 		this.game.load.image('machineTop', 'assets/images/coffeeMachine/machineTop.png');
 		this.game.load.image('glass', 'assets/images/coffeeMachine/glass.png');
@@ -79,6 +80,9 @@ export default class CoffeeMachine extends ChaptersManager{
 		this.game.global.onTimeout = () => {
 			this.addExplosion();
 		};
+		
+		this.happyEndBg = this.game.add.sprite(0, 0, 'coffeeMachineBgHappy');
+		this.happyEndBg.alpha = 0;
 	}
 
 	update(){
@@ -160,6 +164,12 @@ export default class CoffeeMachine extends ChaptersManager{
 		}
 	}
 
+	showHappyEnd() {
+		var tween = this.game.add.tween(this.happyEndBg).to({alpha : 1}, 750, "Linear", false);
+		tween.onComplete.add(this.nextChapter, this);
+		tween.start();
+	};
+
 	updateScore(value){
 		if(value > 0){
 			this.light.frame = 1;
@@ -170,10 +180,11 @@ export default class CoffeeMachine extends ChaptersManager{
 			}
 
 			if(this.correctHits > 9){
-				this.nextChapter();
 				console.log(this.game.global);
 
-				this.nextChapter();
+				var tween = this.game.add.tween(this.coffeeMachine).to({x : this.game.width + this.coffeeMachine.width / 2}, 750, "Linear", false);
+				tween.onComplete.add(this.showHappyEnd, this);
+				tween.start();
 			}
 		} else {
 			this.light.frame = 2;
