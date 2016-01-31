@@ -41,18 +41,16 @@ class Preloader extends Phaser.State{
   }
 
   create() {
-    if(!this.game.global) {
-      this.game.global = {};
-    }
+        if(!this.game.global) {
+          this.game.global = {};
+        }
 
-    this.game.global.audio = this.add.audio('theme', 2, true, true);
-    this.game.global.audio.play();
+        this.game.global.audio = this.add.audio('theme', 2, true, true);
+        this.game.global.audio.onDecoded.add(() => {
+            this.game.global.audio.fadeIn(100);
+            this.state.start('ChaptersManager', true, false, -1);
+        }, this);
 
-    this.game.global.audio.onDecoded.add(() => {
-      this.game.global.audio.fadeIn(100);
-    }, this);
-
-    this.state.start('ChaptersManager', true, false, -1);
   }
 }
 
