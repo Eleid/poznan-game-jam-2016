@@ -30,12 +30,10 @@ const _bowl = {
 
 export default class extends ChaptersManager {
 	preload() {
-		this.load.image('cornflakesBackground', 'assets/images/cornflakes/background.jpg');
-
-		this.load.spritesheet('cornflakesCornflake', 'assets/images/cornflakes/cornflake.png', _cornflake.width, _cornflake.height);
-		this.load.spritesheet('cornflakesBox', 'assets/images/cornflakes/box.png', _box.width, _box.height);
-		this.load.spritesheet('cornflakesLabel', 'assets/images/cornflakes/label.png', _box.width, _box.height);
-		this.load.spritesheet('cornflakesBowl', 'assets/images/cornflakes/bowl.png', _bowl.width, _bowl.height);
+		this.load.spritesheet('cornflakes-cornflake', 'assets/images/cornflakes/cornflake.png', _cornflake.width, _cornflake.height);
+		this.load.spritesheet('cornflakes-box', 'assets/images/cornflakes/box.png', _box.width, _box.height);
+		this.load.spritesheet('cornflakes-label', 'assets/images/cornflakes/label.png', _box.width, _box.height);
+		this.load.spritesheet('cornflakes-bowl', 'assets/images/cornflakes/bowl.png', _bowl.width, _bowl.height);
 		this.load.spritesheet('explosion', 'assets/images/cornflakes/boom.png', 291, 412, 6);
 	}
 
@@ -43,7 +41,7 @@ export default class extends ChaptersManager {
 		const background = this.add.sprite(
 			0,
 			0,
-			'cornflakesBackground',
+			'cornflakes-background',
 		);
 	}
 
@@ -78,7 +76,7 @@ export default class extends ChaptersManager {
 				const cornflake = this.add.sprite(
 					20,
 					20 + index * _cornflake.height,
-					'cornflakesCornflake',
+					'cornflakes-cornflake',
 					type
 				);
 
@@ -95,14 +93,14 @@ export default class extends ChaptersManager {
 		const box = this.add.sprite(
 			_box.width / -2,
 			_box.height / -2,
-			'cornflakesBox',
+			'cornflakes-box',
 			position
 		);
 
 		const label = this.add.sprite(
 			_box.width / -2 + (position < 1 ? 15 : (position > 1 ? -15 : 0)),
 			_box.height / -2,
-			'cornflakesLabel',
+			'cornflakes-label',
 			cornflake
 		);
 
@@ -119,7 +117,7 @@ export default class extends ChaptersManager {
 		const bowl = this.add.sprite(
 			_box.width * 1.5,
 			_box.height + _bowl.height / 2,
-			'cornflakesBowl'
+			'cornflakes-bowl'
 		);
 
 		bowl.anchor.setTo(0.5);
