@@ -75,12 +75,12 @@ export default class CoffeeMachine extends ChaptersManager{
 		setTimeout(() => {
 			this.isStarted = true;
 			this.light.frame = 1;
-		}, 1000);
+		}, 200);
 
 		this.game.global.onTimeout = () => {
 			this.addExplosion();
 		};
-		
+
 		this.happyEndBg = this.game.add.sprite(0, 0, 'coffeeMachineBgHappy');
 		this.happyEndBg.alpha = 0;
 	}

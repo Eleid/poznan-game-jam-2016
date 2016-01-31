@@ -12,7 +12,7 @@ export default class extends Phaser.State{
 	countDown(){
 		this.game.global.time--;
 		this.countDownText.text = this.game.global.time;
-		console.log('countDown: ', this.game.global.time);
+		// console.log('countDown: ', this.game.global.time);
 
 		if(this.game.global.time <= 0){
 			this.countDownText.text = '';
@@ -26,7 +26,6 @@ export default class extends Phaser.State{
 
 	startCountDown(){
 		this.stopCountDown();
-		console.log('startCountDown');
 		this.game.global.time = this.game.global.timerMax = 15;
 
 		this.game.global.timerInterval = setInterval(() => {
@@ -40,12 +39,10 @@ export default class extends Phaser.State{
 	}
 
 	stopCountDown(){
-		console.log('stopCountDown');
 		clearInterval(this.game.global.timerInterval);
 	}
 
 	GUI(){
-		console.log('GUI');
 		let style = { font: "bold 72px Arial", fill: "#000", boundsAlignH: "center", boundsAlignV: "middle", stroke: '2px #000' };
 
 		if(this.countDownText){
@@ -53,6 +50,10 @@ export default class extends Phaser.State{
 		}
 		this.countDownText = this.game.add.text(0, 0, this.game.global.time, style);
 		this.countDownText.setTextBounds(0, 50, this.game.width, 0);
+	}
+
+	hideTimer(){
+		this.countDownText.alpha = 0;
 	}
 
 	initChapters(index){
