@@ -1,6 +1,10 @@
 import ChaptersManager from './chapters_manager';
 
+
+
+
 export default class CoffeeMachine extends ChaptersManager{
+
 	preload(){
 		this.game.load.image('coffeeMachineBg', 'assets/images/coffeeMachine/bg.jpg');
 		this.game.load.image('machine', 'assets/images/coffeeMachine/machine.png');
@@ -71,6 +75,10 @@ export default class CoffeeMachine extends ChaptersManager{
 			this.isStarted = true;
 			this.light.frame = 1;
 		}, 1000);
+
+		this.game.global.onTimeout = () => {
+			this.addExplosion();
+		};
 	}
 
 	update(){
