@@ -5,8 +5,16 @@ import shuffle from '../utils/shuffle';
 
 
 export default class extends Phaser.State{
+	preload() {
+		this.game.load.image('success', 'assets/images/success.png');
+	}
+
 	init(index) {
 		this.initChapters(index);
+	}
+
+	create() {
+
 	}
 
 	countDown(){
@@ -50,10 +58,21 @@ export default class extends Phaser.State{
 		}
 		this.countDownText = this.game.add.text(0, 0, this.game.global.time, style);
 		this.countDownText.setTextBounds(0, 50, this.game.width, 0);
+		//this.showTimer();
 	}
 
 	hideTimer(){
+		if (!this.countDownText) {
+			return;
+		}
 		this.countDownText.alpha = 0;
+	}
+
+	showTimer(){
+		if (!this.countDownText) {
+			return;
+		}
+		this.countDownText.alpha = 1;
 	}
 
 	initChapters(index){
@@ -71,22 +90,33 @@ export default class extends Phaser.State{
 	}
 
 	nextChapter() {
-		if(this.game.global.chapter + 1 < this.game.global.chapters.length) {
-			this.game.global.chapter++;
+		//this.hideTimer();
 
-			this.state.start(
-				this.game.global.chapters[this.game.global.chapter],
-				true,
-				false,
-				this.game.global.chapter
-			);
+		let successText = this.game.add.sprite(this.game.world.width / 2, 100, 'success');
+		successText.anchor.setTo(0.5, 0.5);
+		successText.alpha = 0;
+		let tween = this.game.add.tween(successText).to({alpha : 1}, 1500, "Quart.easeOut", false);
 
-			this.startCountDown();
-		}
+		tween.onComplete.add(() => {
+			if(this.game.global.chapter + 1 < this.game.global.chapters.length) {
+				this.game.global.chapter++;
 
-		else {
-			this.lose();
-		}
+				this.state.start(
+					this.game.global.chapters[this.game.global.chapter],
+					true,
+					false,
+					this.game.global.chapter
+				);
+
+				this.startCountDown();
+			}
+
+			else {
+				this.lose();
+			}
+		}, this);
+		tween.start();
+
 	}
 
 	lose() {
