@@ -1,8 +1,9 @@
+import ChaptersManager from './chapters_manager';
+
 import shuffle from '../utils/shuffle';
 import random from '../utils/random';
 import contains from '../utils/contains';
 import shake from '../utils/shake';
-import ChaptersManager from './chaptersManager';
 
 
 
@@ -27,14 +28,21 @@ const _bowl = {
 
 
 
-export default class extends ChaptersManager{
+export default class extends ChaptersManager {
 	preload() {
-		this.load.image('cornflakesBackground', 'assets/images/cornflakes/background.jpg');
+		this.load.spritesheet('cornflakes-cornflake', 'assets/images/cornflakes/cornflake.png', _cornflake.width, _cornflake.height);
+		this.load.spritesheet('cornflakes-box', 'assets/images/cornflakes/box.png', _box.width, _box.height);
+		this.load.spritesheet('cornflakes-label', 'assets/images/cornflakes/label.png', _box.width, _box.height);
+		this.load.spritesheet('cornflakes-bowl', 'assets/images/cornflakes/bowl.png', _bowl.width, _bowl.height);
+		this.load.spritesheet('explosion', 'assets/images/cornflakes/boom.png', 291, 412, 6);
+	}
 
-		this.load.spritesheet('cornflakesCornflake', 'assets/images/cornflakes/cornflake.png', _cornflake.width, _cornflake.height);
-		this.load.spritesheet('cornflakesBox', 'assets/images/cornflakes/box.png', _box.width, _box.height);
-		this.load.spritesheet('cornflakesLabel', 'assets/images/cornflakes/label.png', _box.width, _box.height);
-		this.load.spritesheet('cornflakesBowl', 'assets/images/cornflakes/bowl.png', _bowl.width, _bowl.height);
+	createBackground() {
+		const background = this.add.sprite(
+			0,
+			0,
+			'cornflakes-background',
+		);
 	}
 
 	createOrder(order) {
@@ -68,20 +76,12 @@ export default class extends ChaptersManager{
 				const cornflake = this.add.sprite(
 					20,
 					20 + index * _cornflake.height,
-					'cornflakesCornflake',
+					'cornflakes-cornflake',
 					type
 				);
 
 				group.add(cornflake);
 			}, this);
-	}
-
-	createBackground() {
-		const background = this.add.sprite(
-			0,
-			0,
-			'cornflakesBackground',
-		);
 	}
 
 	createBox(position, cornflake) {
@@ -93,14 +93,14 @@ export default class extends ChaptersManager{
 		const box = this.add.sprite(
 			_box.width / -2,
 			_box.height / -2,
-			'cornflakesBox',
+			'cornflakes-box',
 			position
 		);
 
 		const label = this.add.sprite(
 			_box.width / -2 + (position < 1 ? 15 : (position > 1 ? -15 : 0)),
 			_box.height / -2,
-			'cornflakesLabel',
+			'cornflakes-label',
 			cornflake
 		);
 
@@ -117,7 +117,7 @@ export default class extends ChaptersManager{
 		const bowl = this.add.sprite(
 			_box.width * 1.5,
 			_box.height + _bowl.height / 2,
-			'cornflakesBowl'
+			'cornflakes-bowl'
 		);
 
 		bowl.anchor.setTo(0.5);
@@ -148,6 +148,7 @@ export default class extends ChaptersManager{
 			}, this);
 
 		group.add(this.createBowl());
+		this.exploaded = false;
 	}
 
 	addToBowl(box, position, cornflake) {
@@ -166,7 +167,16 @@ export default class extends ChaptersManager{
 
 		else {
 			if(bowlContains > orderContains) {
-				this.gameOver();
+				if (this.exploaded) {
+					return;
+				}
+				this.exploaded = true;
+				var explosion = this.game.add.sprite(this.objects.bowl.x + this.objects.bowl.width / 2, this.objects.bowl.y, 'explosion');
+				explosion.scale.x = 1;
+				explosion.scale.y = 1;
+				var anim = explosion.animations.add('explode');
+				anim.onComplete.add(function () { this.lose(); }, this);
+				anim.play(10, false);
 			}
 		}
 	}
