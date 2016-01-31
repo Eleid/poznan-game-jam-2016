@@ -2,7 +2,7 @@ import ChaptersManager from './chapters_manager';
 
 export default class PooScene extends ChaptersManager {
     preload() {
-        this.game.load.image('background', 'assets/images/explosion.png');
+        this.game.load.image('background', 'assets/images/pooMan/lazienka.jpg');
         this.game.load.image('pooMan', 'assets/images/pooMan/01.png');
         this.game.load.image('toiletBarCorrect', 'assets/images/pooMan/toiletBarCorrect.png');
         this.game.load.image('toiletBarBad', 'assets/images/pooMan/toiletBarBad.png');
@@ -19,7 +19,6 @@ export default class PooScene extends ChaptersManager {
         this.game.load.image('januszPart9', 'assets/images/pooMan/boom/09.png');
         this.game.load.image('januszPart10', 'assets/images/pooMan/boom/10.png');
         this.game.load.image('januszPart11', 'assets/images/pooMan/boom/11.png');
-        //this.game.load.spritesheet('explosion', 'assets/images/explosion.png', 46.25, 37.5, 62);
     }
 
     create() {
@@ -44,12 +43,10 @@ export default class PooScene extends ChaptersManager {
         this.pooManGroup.add(this.januszGroup);
         //this.pooManGroup.add(this.pooManHeadRed);
 
-        //this.pooManHeadRed.x = 155;
-        //this.pooManHeadRed.y = 78;
         this.pooManHeadNormal.x = 155;
-        this.pooManHeadNormal.y = 78;
+        this.pooManHeadNormal.y = 180;
         this.januszGroup.x = 155;
-        this.januszGroup.y = 78;
+        this.januszGroup.y = 180;
 
         var headHeightAboveBody = this.pooManHeadNormal.y - this.pooMan.y;
         var groupHeight = headHeightAboveBody + this.pooMan.height;
@@ -174,7 +171,7 @@ export default class PooScene extends ChaptersManager {
         this.toiletBarCorrect.x = this.toiletBarMargin + this.toiletBarBadLeft.scale.x;
         this.toiletBarCorrect.scale.x = (this.game.width / 2 - this.toiletBarMargin - this.toiletBarBadRight.width) * 2;
         this.toiletMarker = this.game.add.sprite(0, 0, 'toiletMarker');
-        this.toiletMarker.y = barCenterY;
+        this.toiletMarker.y = barCenterY - (this.toiletMarker.height - this.toiletBarCorrect.height) / 2;//barCenterY;
         this.toiletMarker.x = this.game.width / 2 - this.toiletMarker.width / 2;
     }
 
