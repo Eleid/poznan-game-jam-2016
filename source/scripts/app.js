@@ -18,6 +18,8 @@ class Init extends Phaser.Game {
     this.state.add('preloader', Preloader, false);
 
     this.state.add('menu', Menu, false);
+    this.state.add('options', Options, false);
+
     this.state.add('chapters-manager', ChaptersManager, false);
     this.state.add('CoffeeMachine', CoffeeMachine, false);
     this.state.add('cornflakes', Cornflakes, false);
@@ -53,13 +55,11 @@ class Preloader extends Phaser.State{
     }
 
     this.game.global.audio = this.add.audio('theme', 2, true, true);
-    this.game.global.audio.play();
 
     this.game.global.audio.onDecoded.add(() => {
       this.game.global.audio.fadeIn(1000);
+      this.state.start('menu', true);
     }, this);
-
-    this.game.state.start('menu', true);
   }
 }
 

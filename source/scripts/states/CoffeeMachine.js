@@ -3,6 +3,7 @@ import ChaptersManager from './chapters_manager';
 export default class CoffeeMachine extends ChaptersManager{
 	preload(){
 		this.game.load.image('coffeeMachineBg', 'assets/images/coffeeMachine/bg.jpg');
+		this.game.load.image('coffeeMachineBgHappy', 'assets/images/coffeeMachine/bg_happy.jpg');
 		this.game.load.image('machine', 'assets/images/coffeeMachine/machine.png');
 		this.game.load.image('machineTop', 'assets/images/coffeeMachine/machineTop.png');
 		this.game.load.image('glass', 'assets/images/coffeeMachine/glass.png');
@@ -16,12 +17,14 @@ export default class CoffeeMachine extends ChaptersManager{
 	}
 
 	create(){
-		this.game.add.sprite(0, 0, 'coffeeMachineBg');
+		this.bg = this.game.add.sprite(0, 0, 'coffeeMachineBg');
 
 		this.coffeeMachine = this.game.add.group();
 
 		this.boom = this.game.add.sprite(60, -130, 'boom');
 		this.boom.anchor.setTo(0.5);
+		this.boom.alpha = 0;
+
 		this.coffeeMachine.add(this.boom);
 
 		this.coffeeMachine.create(0, 0, 'machine');
@@ -69,6 +72,9 @@ export default class CoffeeMachine extends ChaptersManager{
 			this.isStarted = true;
 			this.light.frame = 1;
 		}, 1000);
+
+		this.happyEndBg = this.game.add.sprite(0, 0, 'coffeeMachineBgHappy');
+		this.happyEndBg.alpha = 0;
 	}
 
 	update(){
@@ -107,17 +113,19 @@ export default class CoffeeMachine extends ChaptersManager{
 	}
 
 	updateErrors(){
-		if( this.game.rnd.integerInRange(0, 1) ){
-			if(this.isErrorLeft){
-				this.loseLeftError();
+		if(this.isStarted){
+			if( this.game.rnd.integerInRange(0, 1) ){
+				if(this.isErrorLeft){
+					this.loseLeftError();
+				} else {
+					this.showLeftError();
+				}
 			} else {
-				this.showLeftError();
-			}
-		} else {
-			if(this.isErrorRight){
-				this.loseRightError();
-			} else {
-				this.showRightError();
+				if(this.isErrorRight){
+					this.loseRightError();
+				} else {
+					this.showRightError();
+				}
 			}
 		}
 	}
@@ -128,11 +136,9 @@ export default class CoffeeMachine extends ChaptersManager{
 		this.boom.scale.setTo(1, 1);
 
 		if(this.isErrorLeft){
-			console.log('hitted error left!');
 			this.hideLeftError();
 			this.updateScore(1);
 		} else {
-			console.log('missed error left!');
 			this.updateScore(-1);
 		}
 	}
@@ -143,14 +149,18 @@ export default class CoffeeMachine extends ChaptersManager{
 		this.boom.scale.setTo(-1, 1);
 
 		if(this.isErrorRight){
-			console.log('hitted error right');
 			this.hideRightError();
 			this.updateScore(1);
 		} else {
-			console.log('missed error right');
 			this.updateScore(-1);
 		}
 	}
+
+	showHappyEnd() {
+		var tween = this.game.add.tween(this.happyEndBg).to({alpha : 1}, 750, "Linear", false);
+		tween.onComplete.add(this.nextChapter, this);
+		tween.start();
+	};
 
 	updateScore(value){
 		if(value > 0){
@@ -159,37 +169,46 @@ export default class CoffeeMachine extends ChaptersManager{
 
 			if( !(this.correctHits % 2) ) {
 				this.coffee.frame++;
-
 			}
 
-			if(this.correctHits > 10){
+			if(this.correctHits > 9){
 				console.log(this.game.global);
 
-				this.nextChapter();
+				var tween = this.game.add.tween(this.coffeeMachine).to({x : this.game.width + this.coffeeMachine.width / 2}, 750, "Linear", false);
+				tween.onComplete.add(this.showHappyEnd, this);
+				tween.start();
 			}
 		} else {
 			this.light.frame = 2;
 			this.missedHits++;
 			console.log('missedHits: ', this.missedHits);
 			if(this.missedHits > 2){
-				var explosion = this.game.add.sprite(this.coffeeMachine.x, this.coffeeMachine.y - 150, 'explosion');
-				explosion.scale.x = 1;
-				explosion.scale.y = 1;
-				var anim = explosion.animations.add('explode');
-				anim.onComplete.add(function () { this.lose(); }, this);
-				anim.play(20, false);
+				this.isStarted = false;
+				this.addExplosion();
 			}
 		}
 	}
 
+	addExplosion(){
+		this.hideLeftError();
+		this.hideRightError();
+		var explosion = this.game.add.sprite(this.coffeeMachine.x + 250, this.coffeeMachine.y + 90, 'explosion');
+		explosion.anchor.setTo(0.5);
+		explosion.scale.setTo(5);
+		var anim = explosion.animations.add('explode');
+		anim.onComplete.add(function () { this.lose(); }, this);
+		anim.play(17, false);
+
+		this.game.add.tween(this.bg).to({ alpha: 0.01 }, 400, Phaser.Easing.Out, true);
+		this.game.add.tween(this.coffeeMachine).to({ alpha: 0.01 }, 400, 'Linear', true);
+	}
+
 	loseLeftError(){
-		console.log('lose error left');
 		this.hideLeftError();
 		this.updateScore(-1);
 	}
 
 	loseRightError(){
-		console.log('lose error right');
 		this.hideRightError();
 		this.updateScore(-1);
 	}
